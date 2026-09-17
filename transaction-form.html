@@ -1,77 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!--
-    WEEK 4 — SESSION 1 LIVE DEMO
-    Goal: move from Week 3 transaction design to a clean semantic HTML page.
-
-    Teaching focus:
-    1. Basic HTML document structure
-    2. Elements + nesting
-    3. Semantic HTML
-    4. Attributes
-    5. Edit → Save → Refresh → Verify
-  -->
 
   <meta charset="UTF-8">
-
-  <!-- Helps the page display properly on different screen sizes -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Appears in the browser tab -->
-  <title>Expense Reimbursement</title>
+  <title>Loyalty Rewards System</title>
 </head>
 
 <body>
 
-  <!--
-    <header> = introductory area of the page.
-    It communicates the purpose of the page.
-  -->
   <header>
     <h1>Loyalty Rewards System</h1>
-    <p>Claim your loyalty points here</p>
+    <p>Claim your loyalty reward here.</p>
   </header>
 
-  <!--
-    <main> = the primary content of this page.
-    A page should normally have one main content region.
-  -->
   <main>
 
-    <!--
-      <section> groups related content.
-      This first section gives instructions before the transaction form.
-    -->
     <section>
       <h2>Before You Submit</h2>
-      <p>Please have your loyalty info, payment information, amount, and receipt information ready.</p>
+      <p>
+        Please have your loyalty information, type of reward, 
+        and receipt information ready.
+      </p>
     </section>
 
-    <!--
-      This second section represents the future transaction-entry area.
-
-      In Session 1, we stop at structure.
-      In Session 2, we will place the actual <form> and controls here.
-    -->
     <section>
-      <h2>Reward Option Details</h2>
+      <h2>Reward Details</h2>
 
-      <p>
-        User will earn loyalty points based on their purchases and claim their rewards here.
-        Redeem points before expiration date to enjoy the benefits.
+      <!--
+        <form> groups the controls that participate in one submission.
 
-      </p>
+        method="get" is used only for this classroom demo.
+        After a valid submission, notice that the field NAMES appear
+        in the browser URL as submitted data.
+
+        In the real capstone, submission will later go through
+        JavaScript/API/backend logic.
+      -->
+      <form method="get">
+
+        <!--
+          <fieldset> groups related controls.
+          <legend> gives the group a meaningful name.
+        -->
+        <fieldset>
+
+          <legend>Claim Your Reward Here</legend>
+
+          <!-- =====================================================
+               CUSTOMER ID
+               ===================================================== -->
+
+          <!--
+            for="customerId" must match id="customerId".
+            This connects the visible label to the input.
+          -->
+          <label for="customerId">Customer ID</label>
+          <!--for connect the label to input id-->
+          <input
+            id="customerId"
+            name="customerId"
+            type="text"
+            required
+          >
+          <!-- <br> new line-->
+          <br><br>
+
+          <!-- =====================================================
+               CLAIM DATE
+               ===================================================== -->
+
+          <label for="claimDate">Claim Date</label>
+
+          <input
+            id="claimDate"
+            name="claimDate"
+            type="date"
+            required
+          >
+
+          <br><br>
+
+          <!-- =====================================================
+               CATEGORY
+               ===================================================== -->
+
+          <label for="category">Category</label>
+
+          <!--
+            <select> is appropriate because the business allows
+            a known set of categories.
+          -->
+          <select
+            id="category"
+            name="category"
+            required
+          >
+            <option value="">Choose a category</option>
+            <option value="Drink">Drink</option>
+            <option value="Meals">Meals</option>
+            <option value="Merch">Merch</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <br><br>
+
+          <!-- =====================================================
+               AMOUNT
+               ===================================================== -->
+
+          <label for="amount">Reward Amount ($)</label>
+
+          <input
+            id="amount"
+            name="amount"
+            type="number"
+            required
+            min="0.01"
+            step="0.01"
+          >
+
+          <br><br>
+
+          <!-- =====================================================
+               COMMENTS/REVIEW
+               ===================================================== -->
+
+          <label for="comments">Comments/Review</label>
+          <br>
+
+          <textarea
+            id="comments"
+            name="comments"
+            rows="4"
+            cols="45"
+            required
+          ></textarea>
+
+          <br><br>
+
+          <!-- =====================================================
+               RECEIPT CHECKBOX
+               ===================================================== -->
+
+          <!--
+            Checkbox = yes/no flag.
+
+            BUSINESS RULE FOR LATER:
+            If amount > $15, a receipt is required.
+
+          -->
+          <input
+            id="receiptAttached"
+            name="receiptAttached"
+            type="checkbox"
+            value="yes"
+          >
+
+          <label for="receiptAttached">
+            Receipt attached
+          </label>
+
+        </fieldset>
+
+        <br>
+
+        <!--
+          type="submit" asks the browser to submit the form.
+
+          Before submission, the browser checks the native constraints.
+          Try:
+          - leaving a required field empty
+          - entering amount = 0
+          - entering amount = 5600
+        -->
+        <button type="submit">
+          Submit Request
+        </button>
+
+      </form>
+
     </section>
 
   </main>
 
-  <!--
-    <footer> = supporting or closing information.
-    It is not the main transaction content.
-  -->
   <footer>
-    <p>Enjoy a hot coffee on us!</p>
+    <p>Don't forget to leave a review!</p>
   </footer>
 
 </body>
