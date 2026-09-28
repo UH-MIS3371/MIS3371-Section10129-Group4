@@ -1,0 +1,221 @@
+/* 
+        BASE
+*/
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  color: #3b2a20;
+  background-color: #f4eee5;
+}
+
+/* 
+        HEADER
+*/
+
+header {
+  padding: 36px 0;
+  color: #fffaf3;
+  background-color: #4a2f24;
+  border-bottom: 4px solid #c4874b;
+}
+
+header h1 {
+  margin: 4px 0 8px;
+  font-size: 2rem;
+}
+
+header p {
+  margin: 0;
+}
+
+/* 
+        MAIN
+*/
+
+main {
+  width: 92%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 0 40px;
+}
+
+main > section {
+  margin-bottom: 22px;
+  padding: 24px;
+  background-color: #fffaf3;
+  border: 1px solid #dfd0bd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(74, 47, 36, 0.08);
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #563827;
+}
+
+/* 
+        FORM
+*/
+
+fieldset {
+  margin: 0 0 20px;
+  padding: 20px;
+  border: 1px solid #cdb9a2;
+  border-radius: 8px;
+}
+
+legend {
+  padding: 0 8px;
+  color: #563827;
+  font-weight: 700;
+}
+
+/*
+  Reusable class for individual form fields.
+*/
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-row {
+  display: flex;
+  gap: 18px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+/*
+  Reusable styling for the main form controls.
+*/
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font: inherit;
+  color: #3b2a20;
+  background-color: #fffdf9;
+  border: 1px solid #bda993;
+  border-radius: 6px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* 
+        CHECKBOX
+*/
+
+.checkbox-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 4px 0 18px;
+}
+
+.checkbox-group input {
+  width: auto;
+  margin-top: 5px;
+}
+
+.checkbox-group label {
+  margin: 0;
+  font-weight: 400;
+}
+
+/* 
+        FOCUS
+*/
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 3px solid rgba(196, 135, 75, 0.28);
+  border-color: #805334;
+}
+
+button:focus {
+  outline: 3px solid rgba(196, 135, 75, 0.45);
+  outline-offset: 2px;
+}
+
+/* 
+        BUTTON
+*/
+
+button {
+  padding: 11px 20px;
+  font: inherit;
+  font-weight: 700;
+  color: #fffaf3;
+  background-color: #68432e;
+  border: 1px solid #68432e;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #4a2f24;
+  border-color: #4a2f24;
+}
+
+/* 
+        FOOTER
+*/
+
+footer {
+  padding: 20px 0;
+  color: #fffaf3;
+  background-color: #35251d;
+  text-align: center;
+}
+
+footer p {
+  margin: 0;
+}
+
+/* 
+        RESPONSIVE LAYOUT
+*/
+
+@media (max-width: 700px) {
+
+  header {
+    padding: 28px 0;
+  }
+
+  header h1 {
+    font-size: 1.6rem;
+  }
+
+  main > section {
+    padding: 18px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  button {
+    width: 100%;
+  }
+
+}

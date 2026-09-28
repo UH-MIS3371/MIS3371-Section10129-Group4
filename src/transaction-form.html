@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loyalty Rewards System</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -18,8 +18,9 @@
 
     <section>
       <h2>Before You Submit</h2>
+
       <p>
-        Please have your loyalty information, type of reward, 
+        Please have your loyalty information, type of reward,
         and receipt information ready.
       </p>
     </section>
@@ -28,14 +29,8 @@
       <h2>Reward Details</h2>
 
       <!--
-        <form> groups the controls that participate in one submission.
-
-        method="get" is used only for this classroom demo.
-        After a valid submission, notice that the field NAMES appear
-        in the browser URL as submitted data.
-
-        In the real capstone, submission will later go through
-        JavaScript/API/backend logic.
+        <form> groups the controls that participate
+        in one submission.
       -->
       <form method="get">
 
@@ -51,129 +46,118 @@
                CUSTOMER ID
                ===================================================== -->
 
-          <!--
-            for="customerId" must match id="customerId".
-            This connects the visible label to the input.
-          -->
-          <label for="customerId">Customer ID</label>
-          <!--for connect the label to input id-->
-          <input
-            id="customerId"
-            name="customerId"
-            type="text"
-            required
-          >
-          <!-- <br> new line-->
-          <br><br>
+          <section class="form-group">
+            <label for="customerId">Customer ID</label>
+
+            <input
+              class="form-control"
+              id="customerId"
+              name="customerId"
+              type="text"
+              required
+            >
+          </section>
 
           <!-- =====================================================
-               CLAIM DATE
+               CLAIM DATE AND CATEGORY
                ===================================================== -->
 
-          <label for="claimDate">Claim Date</label>
+          <section class="form-row">
 
-          <input
-            id="claimDate"
-            name="claimDate"
-            type="date"
-            required
-          >
+            <section class="form-group">
+              <label for="claimDate">Claim Date</label>
 
-          <br><br>
+              <input
+                class="form-control"
+                id="claimDate"
+                name="claimDate"
+                type="date"
+                required
+              >
+            </section>
+
+            <section class="form-group">
+              <label for="category">Category</label>
+
+              <select
+                class="form-control"
+                id="category"
+                name="category"
+                required
+              >
+                <option value="">Choose a category</option>
+                <option value="drink">Drink</option>
+                <option value="meals">Meals</option>
+                <option value="merch">Merch</option>
+                <option value="other">Other</option>
+              </select>
+            </section>
+
+          </section>
 
           <!-- =====================================================
-               CATEGORY
+               REWARD AMOUNT
                ===================================================== -->
 
-          <label for="category">Category</label>
+          <section class="form-group">
+            <label for="amount">Reward Amount ($)</label>
 
-          <!--
-            <select> is appropriate because the business allows
-            a known set of categories.
-          -->
-          <select
-            id="category"
-            name="category"
-            required
-          >
-            <option value="">Choose a category</option>
-            <option value="Drink">Drink</option>
-            <option value="Meals">Meals</option>
-            <option value="Merch">Merch</option>
-            <option value="Other">Other</option>
-          </select>
-
-          <br><br>
+            <input
+              class="form-control"
+              id="amount"
+              name="amount"
+              type="number"
+              required
+              min="0.01"
+              step="0.01"
+            >
+          </section>
 
           <!-- =====================================================
-               AMOUNT
+               COMMENTS / REVIEW
                ===================================================== -->
 
-          <label for="amount">Reward Amount ($)</label>
+          <section class="form-group">
+            <label for="comments">Comments / Review</label>
 
-          <input
-            id="amount"
-            name="amount"
-            type="number"
-            required
-            min="0.01"
-            step="0.01"
-          >
-
-          <br><br>
-
-          <!-- =====================================================
-               COMMENTS/REVIEW
-               ===================================================== -->
-
-          <label for="comments">Comments/Review</label>
-          <br>
-
-          <textarea
-            id="comments"
-            name="comments"
-            rows="4"
-            cols="45"
-            required
-          ></textarea>
-
-          <br><br>
+            <textarea
+              class="form-control"
+              id="comments"
+              name="comments"
+              rows="4"
+              required
+            ></textarea>
+          </section>
 
           <!-- =====================================================
                RECEIPT CHECKBOX
                ===================================================== -->
 
+          <section class="checkbox-group">
+            <input
+              id="receiptAttached"
+              name="receiptAttached"
+              type="checkbox"
+              value="yes"
+            >
+
+            <label for="receiptAttached">
+              Receipt attached
+            </label>
+          </section>
+
           <!--
-            Checkbox = yes/no flag.
-
             BUSINESS RULE FOR LATER:
-            If amount > $15, a receipt is required.
 
+            If the reward amount is greater than $15,
+            a receipt is required.
+
+            JavaScript or server-side logic will handle
+            this rule later.
           -->
-          <input
-            id="receiptAttached"
-            name="receiptAttached"
-            type="checkbox"
-            value="yes"
-          >
-
-          <label for="receiptAttached">
-            Receipt attached
-          </label>
 
         </fieldset>
 
-        <br>
-
-        <!--
-          type="submit" asks the browser to submit the form.
-
-          Before submission, the browser checks the native constraints.
-          Try:
-          - leaving a required field empty
-          - entering amount = 0
-          - entering amount = 5600
-        -->
         <button type="submit">
           Submit Request
         </button>
