@@ -19,20 +19,23 @@ body {
 */
 
 header {
-  padding: 36px 4%;
+  padding: 36px 0;
   color: #fffaf3;
   background-color: #4a2f24;
   border-bottom: 4px solid #c4874b;
-  text-align: center:
 }
 
 header h1 {
-  margin: 4px 0 8px;
+  width: 92%;
+  max-width: 900px;
+  margin: 4px auto 8px;
   font-size: 2rem;
 }
 
 header p {
-  margin: 0;
+  width: 92%;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 /* 
@@ -182,14 +185,15 @@ button:hover {
 */
 
 footer {
-  padding: 20px 4%;
+  padding: 20px 0;
   color: #fffaf3;
   background-color: #35251d;
-  text-align: center;
 }
 
 footer p {
-  margin: 0;
+  width: 92%;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 /* 
@@ -199,7 +203,7 @@ footer p {
 @media (max-width: 700px) {
 
   header {
-    padding: 28px 4%;
+    padding: 28px 0;
   }
 
   header h1 {
