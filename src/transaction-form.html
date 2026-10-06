@@ -22,7 +22,7 @@
 
       <p>
         Please have your loyalty information, type of reward,
-        and receipt information ready.
+        and item price ready.
       </p>
     </section>
 
@@ -58,6 +58,11 @@
               required
             >
           </section>
+
+          <p>
+            Available Reward Points:
+            <span id="availablePoints"></span>
+          </p>
 
           <!-- =====================================================
                CLAIM DATE AND CATEGORY
@@ -114,23 +119,9 @@
                 step="0.01"
               >
             </section>
-
-            <section class="form-group">
-              <label for="rewardPoints">Reward Points to Use</label>
-
-              <input
-                class="form-control"
-                id="rewardPoints"
-                name="rewardPoints"
-                type="number"
-                required
-                min="0"
-                step="1"
-              >
-            </section>
-          
+                    
           </section>
-
+          
           <p id="rewardMessage" aria-live="polite"></p>
 
           <!-- =====================================================
@@ -165,16 +156,6 @@
               Receipt attached
             </label>
           </section>
-
-          <!--
-            BUSINESS RULE FOR LATER:
-
-            If the reward amount is greater than $15,
-            a receipt is required.
-
-            JavaScript or server-side logic will handle
-            this rule later.
-          -->
 
         </fieldset>
 
