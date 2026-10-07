@@ -1,71 +1,73 @@
-/*const MINIMUM_PRICE = 0;
-
-// Example transaction values for testing.
-let itemPrice = 15;
-let rewardAmount = 10;
-
-function applyReward(price, reward) {
-    const finalPrice = price - reward;
-    return finalPrice >= MINIMUM_PRICE;
-
-}
-
-const rewardAllowed = applyReward(itemPrice, rewardAmount);
-
-console.log('Item price: ', itemPrice);
-console.log('Reward amount: ', rewardAmount);
-console.log('Is reward allowed? ', rewardAllowed);
-
-if (rewardAllowed) {
-    console.log('Reward can be applied.');
-} else {
-    console.log('Reward cannot be applied. Final price would be below minimum.');
-}
-
-// Try changing rewardAmount to 10.99, 15, and 20. */
-
-// Business Rule:
-// Rewards cannot reduce the final price below $0
+// Business rules:
+// 1 point covers $1 of the item price.
+// Rewards must cover the full item price.
+// Fractional points are allowed.
+// Partial discounts and cash back are not allowed.
 
 const MINIMUM_PRICE = 0;
 const POINT_VALUE = 1;
+const CUSTOMER_POINTS = 100; // Sample balance for testing
 
 const form = document.querySelector('#rewardForm');
 const itemPriceInput = document.querySelector('#itemPrice');
-const rewardPointsInput = document.querySelector('#rewardPoints');
+const availablePoints = document.querySelector('#availablePoints');
 const rewardMessage = document.querySelector('#rewardMessage');
 
+// Display the sample balance when the page loads.
+availablePoints.textContent = CUSTOMER_POINTS;
+
 function applyReward(price, points) {
-    const rewardValue = points * POINT_VALUE;
-    const finalPrice = price - rewardValue;
-    return finalPrice >= MINIMUM_PRICE;
+    // Compare whole cents to avoid decimal precision errors.
+    const priceCents = Math.round(price * 100);
+    const rewardCents = Math.round(points * POINT_VALUE * 100);
+    const finalPriceCents = priceCents - rewardCents;
+
+    return finalPriceCents >= MINIMUM_PRICE &&
+           finalPriceCents === 0;
 }
 
 function updateRewardMessage() {
-    const itemPrice = Number(itemPriceInput.value);
-    const rewardPoints = Number(rewardPointsInput.value);
-
-    if (itemPriceInput.value === '' || rewardPointsInput.value === '') {
+    if (itemPriceInput.value === '') {
         rewardMessage.textContent = '';
         return;
-    }   
+    }
 
-    if (applyReward(itemPrice, rewardPoints)) {
-        const rewardValue = rewardPoints * POINT_VALUE;
-        const finalPrice = itemPrice - rewardValue;
-        
-        rewardMessage.textContent = `Reward can be applied. Final price: $${finalPrice.toFixed(2)}`;
+    if (!itemPriceInput.checkValidity()) {
+        rewardMessage.textContent = 'Enter a valid item price.';
+        return;
+    }
+
+    const itemPrice = Number(itemPriceInput.value);
+    const pointsRequired = itemPrice / POINT_VALUE;
+
+    if (CUSTOMER_POINTS < pointsRequired) {
+        rewardMessage.textContent =
+            `Reward cannot be applied. You need ${pointsRequired} points, ` +
+            `but you have ${CUSTOMER_POINTS}.`;
+        return;
+    }
+
+    if (applyReward(itemPrice, pointsRequired)) {
+        rewardMessage.textContent =
+            `Reward can be applied using ${pointsRequired} points. ` +
+            'Your item is free! Final price: $0.00';
     } else {
-        rewardMessage.textContent = 
-        'Reward cannot be applied because the final price would be below $0.';
+        rewardMessage.textContent =
+            'Reward must cover the exact item price. ' +
+            'Partial discounts and cash back are not allowed.';
     }
 }
 
 function handleDemoSubmit(event) {
     event.preventDefault();
-    console.log('Demo submit intercepted. No server is connected yet.');
+    updateRewardMessage();
+
+    console.log('Demo only. No transaction saved or points deducted.');
 }
 
-itemPriceInput.addEventListener('input', updateRewardMessage);
-rewardPointsInput.addEventListener('input', updateRewardMessage);
+// Clear the previous result when the price changes.
+itemPriceInput.addEventListener('input', function () {
+    rewardMessage.textContent = '';
+});
+
 form.addEventListener('submit', handleDemoSubmit);
