@@ -1,11 +1,11 @@
 // Business rules:
-// 1 point covers $1 of the item price.
+// 1 point covers $0.10 of the item price.
 // Rewards must cover the full item price.
 // Fractional points are allowed.
 // Partial discounts and cash back are not allowed.
 
 const MINIMUM_PRICE = 0;
-const POINT_VALUE = 1;
+const POINT_VALUE = 0.10;
 const CUSTOMER_POINTS = 100; // Sample balance for testing
 
 const form = document.querySelector('#rewardForm');
