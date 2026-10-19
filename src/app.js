@@ -65,9 +65,6 @@ function handleDemoSubmit(event) {
     console.log('Demo only. No transaction saved or points deducted.');
 }
 
-// Clear the previous result when the price changes.
-itemPriceInput.addEventListener('input', function () {
-    rewardMessage.textContent = '';
-});
+itemPriceInput.addEventListener('input', updateRewardMessage);
 
 form.addEventListener('submit', handleDemoSubmit);
