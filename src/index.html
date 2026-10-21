@@ -47,7 +47,7 @@
         <form> groups the controls that participate
         in one submission.
       -->
-      <form id="rewardForm" method="get">
+      <form id="rewardForm" method="post">
 
         <!--
           <fieldset> groups related controls.
@@ -68,23 +68,8 @@
               class="form-control"
               id="customerId"
               name="customerId"
-              type="text"
-              required
-            >
-          </section>
-
-          <!-- =====================================================
-               PASSWORD
-               ===================================================== -->
-
-          <section class="form-group">
-            <label for="password">Password</label>
-
-            <input
-              class="form-control"
-              id="password"
-              name="password"
-              type="password"
+              type="email"
+              placeholder="example@gmail.com"
               required
             >
           </section>

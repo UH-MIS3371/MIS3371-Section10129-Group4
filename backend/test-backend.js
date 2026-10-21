@@ -4,7 +4,7 @@
 const { processReward, calculateEarnedPoints } = require("./backend");
 
 const baseReward = {
-  customerId: "C001",
+  customerId: "customer@example.com",
   claimDate: "2026-10-14",
   category: "drink",
   itemPrice: 10,
@@ -16,8 +16,8 @@ const baseReward = {
 const redemptionTests = [
   { name: "Valid $5 item", reward: { ...baseReward, itemPrice: 5 }, expectedSuccess: true, expectedPoints: 50 },
   { name: "Valid $9.99 item", reward: { ...baseReward, itemPrice: 9.99 }, expectedSuccess: true, expectedPoints: 99.9 },
-  { name: "Invalid missing customer ID", reward: { ...baseReward, customerId: "" }, expectedSuccess: false },
-  { name: "Invalid zero price", reward: { ...baseReward, itemPrice: 0 }, expectedSuccess: false },
+  { name: "Invalid missing email", reward: { ...baseReward, customerId: "" }, expectedSuccess: false },
+  { name: "Invalid email format", reward: { ...baseReward, customerId: "C001" }, expectedSuccess: false },  { name: "Invalid zero price", reward: { ...baseReward, itemPrice: 0 }, expectedSuccess: false },
   { name: "Boundary exactly $10", reward: { ...baseReward, itemPrice: 10 }, expectedSuccess: true, expectedPoints: 100 },
   { name: "Boundary $10.01", reward: { ...baseReward, itemPrice: 10.01 }, expectedSuccess: false },
   { name: "Extra: fractional $7.55", reward: { ...baseReward, itemPrice: 7.55 }, expectedSuccess: true, expectedPoints: 75.5 }

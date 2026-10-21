@@ -44,7 +44,12 @@ function processReward(reward) {
   const category = String(reward.category || "").trim();
   const comments = String(reward.comments || "").trim();
 
-  if (!customerId) return fail("Customer ID is required.");
+  if (!customerId) {
+    return fail("Email address is required.");
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerId)) {
+    return fail("Enter a valid email address.");
+  }
   if (!claimDate) return fail("Claim date is required.");
   if (!["drink", "meals", "merch", "other"].includes(category)) {
     return fail("Choose a valid reward category.");
