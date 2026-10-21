@@ -1,6 +1,6 @@
 "use strict";
 
-// MIS 3371 Week 8 - trusted local rules for a coffee shop loyalty program.
+// MIS 3371 Week 8 - trusted local rules for a burger chain loyalty program.
 // Earn 1 point per $1 spent; redeem each point for $0.10.
 // Week 8 is local logic only: no form connection, database, or point deduction.
 
