@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loyalty Rewards System</title>
+  <title>Burger Shot Rewards System</title>
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
 </head>
@@ -11,8 +11,22 @@
 <body>
 
   <header>
-    <h1>Loyalty Rewards System</h1>
-    <p>Claim your loyalty reward here.</p>
+
+    <!-- White bar at the very top that holds the logo (top left corner). -->
+    <div class="logo-bar">
+      <img
+        class="logo"
+        src="logo.webp"
+        alt="Burger Shot logo"
+      >
+    </div>
+
+    <!-- Brown area under the logo bar that holds the page title. -->
+    <div class="title-area">
+      <h1>Burger Shot Rewards System</h1>
+      <p>Claim your loyalty reward here.</p>
+    </div>
+
   </header>
 
   <main>
@@ -55,6 +69,22 @@
               id="customerId"
               name="customerId"
               type="text"
+              required
+            >
+          </section>
+
+          <!-- =====================================================
+               PASSWORD
+               ===================================================== -->
+
+          <section class="form-group">
+            <label for="password">Password</label>
+
+            <input
+              class="form-control"
+              id="password"
+              name="password"
+              type="password"
               required
             >
           </section>

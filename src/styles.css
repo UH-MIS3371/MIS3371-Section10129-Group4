@@ -19,10 +19,27 @@ body {
 */
 
 header {
-  padding: 36px 0;
   color: #fffaf3;
   background-color: #4a2f24;
   border-bottom: 4px solid #c4874b;
+}
+
+/* Logo white bar. */
+.logo-bar {
+  padding: 12px 4%;
+  background-color: #ffffff;
+  border-bottom: 1px solid #dfd0bd;
+}
+
+/* Logo corner spot. */
+.logo {
+  display: block;
+  height: 64px;
+  width: auto;
+}
+
+.title-area {
+  padding: 28px 0;
 }
 
 header h1 {
@@ -202,8 +219,12 @@ footer p {
 
 @media (max-width: 700px) {
 
-  header {
-    padding: 28px 0;
+  .logo {
+    height: 48px;
+  }
+
+  .title-area {
+    padding: 22px 0;
   }
 
   header h1 {
