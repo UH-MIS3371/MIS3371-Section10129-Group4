@@ -9,6 +9,8 @@
 const MINIMUM_PRICE = 0;
 const POINT_VALUE = 0.10;
 const CUSTOMER_POINTS = 100;
+const API_URL =
+    "https://3ds4bq9hjb.execute-api.us-east-1.amazonaws.com/api/rewards";
 
 const form = document.querySelector('#rewardForm');
 const emailInput = document.querySelector('#customerId');
@@ -78,7 +80,7 @@ function updateRewardMessage(submitted = false) {
 }
 
 // Validate all required fields on submission.
-function handleDemoSubmit(event) {
+async function handleDemoSubmit(event) {
     event.preventDefault();
 
     const email = emailInput.value.trim();
@@ -118,9 +120,46 @@ function handleDemoSubmit(event) {
         return;
     }
 
-    updateRewardMessage(true);
 
-    console.log('Demo only. No points deducted or saved.');
+    // Collect the reward information from the form.
+    const rewardData = {
+        customerId: email,
+        claimDate: claimDate,
+        category: category,
+        itemPrice: Number(itemPriceInput.value),
+        comments: comments,
+        receiptAttached: document.querySelector('#receiptAttached').checked
+    };
+
+    // Send the reward request to AWS.
+    try {
+        rewardMessage.textContent = 'Submitting reward...';
+
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(rewardData)
+        });
+
+        const result = await response.json();
+
+        // Display the response from our backend.
+        if (response.ok && result.success) {
+            rewardMessage.textContent =
+                'APPROVED: ' + result.message +
+                ' Points required: ' + result.pointsRequired;
+        } else {
+            rewardMessage.textContent =
+                'REJECTED: ' + (result.message || 'Reward request was rejected.');
+        }
+
+    } catch (error) {
+        rewardMessage.textContent =
+            'ERROR: Could not connect to the rewards service.';
+        console.error(error);
+    }
 }
 
 // Update the points message while typing the price.
