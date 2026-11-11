@@ -1,4 +1,4 @@
-// Website: https://main.d13mo20jfpldt.amplifyapp.com/
+<!-- Website: https://main.d13mo20jfpldt.amplifyapp.com/ -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -183,6 +183,66 @@
 
       </form>
 
+      <!-- Show a confirmation number after a reward is saved. -->
+<p id="confirmationPanel" hidden>
+    <strong>Confirmation Number:</strong>
+    <code id="confirmationNumber"></code>
+</p>
+
+<!-- Let customers look up their saved reward transaction. -->
+<section class="status-section">
+    <h2>View Reward Status</h2>
+
+    <p>
+        Enter your confirmation number to check
+        the status of your reward.
+    </p>
+
+    <form id="statusLookupForm">
+        <label for="statusTransactionId">
+            Confirmation Number
+        </label>
+
+        <input
+            type="text"
+            id="statusTransactionId"
+            placeholder="Enter your transaction ID"
+            required
+        >
+
+        <button type="submit" id="viewStatusButton">
+            View Status
+        </button>
+    </form>
+
+    <!-- Display the result from DynamoDB. -->
+    <p id="statusMessage" aria-live="polite"></p>
+
+    <div id="statusResult" hidden>
+        <h3>Reward Information</h3>
+
+        <p>
+            <strong>Transaction ID:</strong>
+            <span id="viewedTransactionId"></span>
+        </p>
+
+        <p>
+            <strong>Status:</strong>
+            <span id="viewedStatus"></span>
+        </p>
+
+        <p>
+            <strong>Submitted At:</strong>
+            <span id="viewedSubmittedAt"></span>
+        </p>
+
+        <p>
+            <strong>Points Used:</strong>
+            <span id="viewedPoints"></span>
+        </p>
+    </div>
+    
+</section>
     </section>
 
   </main>

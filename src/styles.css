@@ -245,3 +245,75 @@ footer p {
   }
 
 }
+
+/*
+    WEEK 11 - CONFIRMATION NUMBER
+*/
+
+#confirmationPanel {
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #f4eee5;
+    border: 1px solid #cdb9a2;
+    border-radius: 6px;
+    overflow-wrap: anywhere;
+}
+
+/* Keep the confirmation hidden until saving succeeds. */
+#confirmationPanel[hidden] {
+    display: none;
+}
+
+#confirmationNumber {
+    font-weight: bold;
+    color: #563827;
+}
+
+/*
+    WEEK 11 - VIEW REWARD STATUS
+*/
+
+.status-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #cdb9a2;
+}
+
+#statusLookupForm {
+    margin-top: 15px;
+}
+
+#statusTransactionId {
+    margin-bottom: 12px;
+}
+
+#statusMessage {
+    margin-top: 15px;
+}
+
+/*
+    DISPLAY SAVED TRANSACTION
+*/
+
+#statusResult {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f4eee5;
+    border: 1px solid #cdb9a2;
+    border-radius: 6px;
+    overflow-wrap: anywhere;
+}
+
+/* Hide transaction details until a record is found. */
+#statusResult[hidden] {
+    display: none;
+}
+
+#statusResult h3 {
+    margin-top: 0;
+    color: #563827;
+}
+
+#statusResult p {
+    margin-bottom: 10px;
+}
