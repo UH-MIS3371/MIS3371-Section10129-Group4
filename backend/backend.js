@@ -1,91 +1,339 @@
+
 "use strict";
 
-// MIS 3371 Week 8 - trusted local rules for a burger chain loyalty program.
-// Earn 1 point per $1 spent; redeem each point for $0.10.
-// Week 8 is local logic only: no form connection, database, or point deduction.
+// MIS 3371 - Burger Shot Rewards System
+// Business logic shared by local tests and AWS Lambda.
+//
+// One reward point is worth $0.10.
+// A reward must cover the entire selected item's price.
+// This demo uses a fixed 100-point balance.
+// Points are not actually deducted from customer accounts.
 
 const POINTS_PER_DOLLAR = 1;
 const POINT_VALUE = 0.10;
-const CUSTOMER_POINTS = 100; // Demo balance, not a real customer account
+const CUSTOMER_POINTS = 100;
+
 let demoSequence = 0;
 
+// =====================================================
+// OFFICIAL BURGER SHOT MENU
+// =====================================================
+
+// Official menu prices live on the server.
+// Never trust a price supplied by the browser.
+
+const MENU_ITEMS = {
+    meals: {
+        cheeseburger: {
+            name: "Cheeseburger",
+            price: 4
+        },
+        hamburger: {
+            name: "Hamburger",
+            price: 3
+        },
+        fries: {
+            name: "Fries",
+            price: 2
+        }
+    },
+
+    drink: {
+        soda: {
+            name: "Soda",
+            price: 2
+        },
+        shake: {
+            name: "Shake",
+            price: 3
+        }
+    },
+
+    merch: {
+        tshirt: {
+            name: "T-Shirt",
+            price: 20
+        }
+    }
+};
+
+// =====================================================
+// REJECTION HELPER
+// =====================================================
+
+// Return a consistent failure response.
 function fail(message) {
-  return { success: false, message };
+    return {
+        success: false,
+        message
+    };
 }
 
-// Separate earning calculation for testing the new earning rule.
-// This does not save a purchase or add points to a customer account.
+// =====================================================
+// CALCULATE EARNED POINTS
+// =====================================================
+
+// Calculate points earned on a separate purchase.
+// This feature does not credit points to a real account.
+
 function calculateEarnedPoints(amountSpent) {
-  if (amountSpent === "" || amountSpent === null || amountSpent === undefined) {
-    return fail("Purchase amount is required.");
-  }
-  const amount = Number(amountSpent);
-  if (!Number.isFinite(amount) || amount <= 0) {
-    return fail("Purchase amount must be greater than $0.");
-  }
-  const cents = Math.round(amount * 100);
-  if (Math.abs(amount * 100 - cents) > 0.000001) {
-    return fail("Purchase amount must be in whole cents.");
-  }
-  return {
-    success: true,
-    amountSpent: cents / 100,
-    pointsEarned: (cents * POINTS_PER_DOLLAR) / 100
-  };
+
+    if (
+        amountSpent === "" ||
+        amountSpent === null ||
+        amountSpent === undefined
+    ) {
+        return fail("Purchase amount is required.");
+    }
+
+    const amount = Number(amountSpent);
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+        return fail(
+            "Purchase amount must be greater than $0."
+        );
+    }
+
+    const cents = Math.round(amount * 100);
+
+    if (
+        Math.abs(amount * 100 - cents) > 0.000001
+    ) {
+        return fail(
+            "Purchase amount must be in whole cents."
+        );
+    }
+
+    return {
+        success: true,
+        amountSpent: cents / 100,
+        pointsEarned:
+            (cents * POINTS_PER_DOLLAR) / 100
+    };
 }
+
+// =====================================================
+// PROCESS A REWARD REQUEST
+// =====================================================
 
 function processReward(reward) {
-  if (!reward || typeof reward !== "object" || Array.isArray(reward)) {
-    return fail("Reward transaction data is required.");
-  }
 
-  const customerId = String(reward.customerId || "").trim();
-  const claimDate = String(reward.claimDate || "").trim();
-  const category = String(reward.category || "").trim();
-  const comments = String(reward.comments || "").trim();
+    // Make sure the request contains an object.
+    if (
+        !reward ||
+        typeof reward !== "object" ||
+        Array.isArray(reward)
+    ) {
+        return fail(
+            "Reward transaction data is required."
+        );
+    }
 
-  if (!customerId) {
-    return fail("Email address is required.");
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerId)) {
-    return fail("Enter a valid email address.");
-  }
-  if (!claimDate) return fail("Claim date is required.");
-  if (!["drink", "meals", "merch", "other"].includes(category)) {
-    return fail("Choose a valid reward category.");
-  }
-  if (!comments) return fail("Comments / Review is required.");
-  if (reward.itemPrice === "" || reward.itemPrice === undefined || reward.itemPrice === null) {
-    return fail("Item price is required.");
-  }
-  const itemPrice = Number(reward.itemPrice);
-  if (!Number.isFinite(itemPrice) || itemPrice <= 0) {
-    return fail("Item price must be greater than $0.");
-  }
+    // Read the submitted customer information.
+    const customerId =
+        String(reward.customerId || "").trim();
 
-  const priceCents = Math.round(itemPrice * 100);
-  if (Math.abs(itemPrice * 100 - priceCents) > 0.000001) {
-    return fail("Item price must be in whole cents.");
-  }
+    const pickupAt =
+        String(reward.pickupAt || "").trim();
 
-  // Each point is worth 10 cents; full redemption must cover every cent.
-  const pointsRequired = priceCents / (100 * POINT_VALUE);
-  if (pointsRequired > CUSTOMER_POINTS) {
-    return fail(`Not enough points. Need ${pointsRequired}, have ${CUSTOMER_POINTS}.`);
-  }
+    const category =
+        String(reward.category || "").trim();
 
-  demoSequence += 1;
-  return {
-    success: true,
-    status: "Validated",
-    transactionId: `RWD-${Date.now()}-${demoSequence}`,
-    submittedAt: new Date().toISOString(),
-    customerId,
-    pointsRequired,
-    finalPrice: 0,
-    remainingPointsIfRedeemed: Number((CUSTOMER_POINTS - pointsRequired).toFixed(2)),
-    message: "Reward is eligible. Full item price is covered."
-  };
+    const rewardItem =
+        String(reward.rewardItem || "").trim();
+
+    const comments =
+        String(reward.comments || "").trim();
+
+    // =================================================
+    // VALIDATE CUSTOMER EMAIL
+    // =================================================
+
+    if (!customerId) {
+        return fail("Email address is required.");
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerId)) {
+        return fail("Enter a valid email address.");
+    }
+
+    // =================================================
+    // VALIDATE PICKUP DATE AND TIME
+    // =================================================
+
+    // The frontend sends a UTC timestamp such as:
+    // 2026-11-14T18:30:00.000Z
+    //
+    // Comparing UTC timestamps avoids differences
+    // between the customer's timezone and AWS Lambda.
+
+    if (!pickupAt) {
+        return fail(
+            "Pickup date and time are required."
+        );
+    }
+
+    const pickupTimestamp = Date.parse(pickupAt);
+
+    // Require a valid UTC ISO timestamp.
+    if (
+        !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(
+            pickupAt
+        ) ||
+        !Number.isFinite(pickupTimestamp) ||
+        new Date(pickupTimestamp).toISOString() !== pickupAt
+    ) {
+        return fail(
+            "Enter a valid pickup date and time."
+        );
+    }
+
+    // Reject dates or times that have already passed.
+    if (pickupTimestamp <= Date.now()) {
+        return fail(
+            "Pickup date and time must be in the future."
+        );
+    }
+
+    // =================================================
+    // VALIDATE CATEGORY
+    // =================================================
+
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            MENU_ITEMS,
+            category
+        )
+    ) {
+        return fail(
+            "Choose a valid reward category."
+        );
+    }
+
+    // =================================================
+    // VALIDATE MENU ITEM
+    // =================================================
+
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            MENU_ITEMS[category],
+            rewardItem
+        )
+    ) {
+        return fail(
+            "Choose a valid menu item."
+        );
+    }
+
+    // =================================================
+    // VALIDATE COMMENTS
+    // =================================================
+
+    if (!comments) {
+        return fail(
+            "Comments / Review is required."
+        );
+    }
+
+    // =================================================
+    // GET OFFICIAL ITEM PRICE
+    // =================================================
+
+    const selectedItem =
+        MENU_ITEMS[category][rewardItem];
+
+    // Reject attempts to override an official price.
+    // New frontend requests do not send itemPrice.
+    if (
+        Object.prototype.hasOwnProperty.call(
+            reward,
+            "itemPrice"
+        ) &&
+        Number(reward.itemPrice) !== selectedItem.price
+    ) {
+        return fail(
+            "Item price does not match the official menu."
+        );
+    }
+
+    // =================================================
+    // CALCULATE REQUIRED POINTS
+    // =================================================
+
+    // Work in cents for accurate currency calculations.
+    const priceCents =
+        Math.round(selectedItem.price * 100);
+
+    // Each point covers 10 cents.
+    const pointsRequired =
+        priceCents / (100 * POINT_VALUE);
+
+    // Reject if the customer does not have enough points.
+    if (pointsRequired > CUSTOMER_POINTS) {
+        return fail(
+            `Not enough points. Need ${pointsRequired}, ` +
+            `have ${CUSTOMER_POINTS}.`
+        );
+    }
+
+    // =================================================
+    // APPROVED REWARD
+    // =================================================
+
+    // This ID is for local testing.
+    // AWS Lambda creates the final DynamoDB transaction ID.
+    demoSequence += 1;
+
+    return {
+        success: true,
+
+        status: "Validated",
+
+        transactionId:
+            `RWD-${Date.now()}-${demoSequence}`,
+
+        submittedAt:
+            new Date().toISOString(),
+
+        // Customer information.
+        customerId,
+
+        // Requested pickup time.
+        pickupAt,
+
+        // Official menu details.
+        category,
+        rewardItem,
+        itemName: selectedItem.name,
+        itemPrice: priceCents / 100,
+
+        // Submitted comments and receipt checkbox.
+        comments,
+
+        receiptAttached:
+            reward.receiptAttached === true,
+
+        // Reward calculations.
+        pointsRequired,
+
+        finalPrice: 0,
+
+        remainingPointsIfRedeemed:
+            Number(
+                (CUSTOMER_POINTS - pointsRequired).toFixed(2)
+            ),
+
+        message:
+            "Reward is eligible. Full item price is covered."
+    };
 }
 
-module.exports = { processReward, calculateEarnedPoints };
+// =====================================================
+// EXPORT FUNCTIONS
+// =====================================================
+
+// AWS Lambda and local tests can use these functions.
+module.exports = {
+    processReward,
+    calculateEarnedPoints
+};

@@ -1,255 +1,385 @@
-<!-- Website: https://main.d13mo20jfpldt.amplifyapp.com/ -->
+
 <!DOCTYPE html>
+<!-- Website: https://main.d13mo20jfpldt.amplifyapp.com/ -->
+
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Burger Shot Rewards System</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Burger Shot Rewards System</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <script src="app.js" defer></script>
 </head>
 
 <body>
 
-  <header>
+    <!-- =====================================================
+         WEBSITE HEADER
+         ===================================================== -->
 
-    <!-- White bar at the very top that holds the logo (top left corner). -->
-    <div class="logo-bar">
-      <img
-        class="logo"
-        src="logo.webp"
-        alt="Burger Shot logo"
-      >
-    </div>
+    <header>
 
-    <!-- Brown area under the logo bar that holds the page title. -->
-    <div class="title-area">
-      <h1>Burger Shot Rewards System</h1>
-      <p>Claim your loyalty reward here.</p>
-    </div>
-
-  </header>
-
-  <main>
-
-    <section>
-      <h2>Before You Submit</h2>
-
-      <p>
-        Please have your loyalty information, type of reward,
-        and receipt information ready.
-      </p>
-    </section>
-
-    <section>
-      <h2>Reward Details</h2>
-
-      <!--
-        <form> groups the controls that participate
-        in one submission.
-      -->
-      <form id="rewardForm" method="post">
-
-        <!--
-          <fieldset> groups related controls.
-          <legend> gives the group a meaningful name.
-        -->
-        <fieldset>
-
-          <legend>Claim Your Reward Here</legend>
-
-          <!-- =====================================================
-               CUSTOMER ID
-               ===================================================== -->
-
-          <section class="form-group">
-            <label for="customerId">Customer ID</label>
-
-            <input
-              class="form-control"
-              id="customerId"
-              name="customerId"
-              type="email"
-              placeholder="example@gmail.com"
-              required
+        <!-- White bar at the top holding the logo. -->
+        <div class="logo-bar">
+            <img
+                class="logo"
+                src="logo.webp"
+                alt="Burger Shot logo"
             >
-          </section>
+        </div>
 
-          <p>
-            
-            Available Reward Points:
-            <span id="availablePoints"></span>
-          
-          </p>
+        <!-- Brown area displaying the website title. -->
+        <div class="title-area">
+            <h1>Burger Shot Rewards System</h1>
+            <p>Claim your loyalty reward here.</p>
+        </div>
 
-          <!-- =====================================================
-               CLAIM DATE AND CATEGORY
-               ===================================================== -->
+    </header>
 
-          <section class="form-row">
+    <main>
 
-            <section class="form-group">
-              <label for="claimDate">Claim Date</label>
+        <!-- =====================================================
+             BEFORE YOU SUBMIT
+             ===================================================== -->
 
-              <input
-                class="form-control"
-                id="claimDate"
-                name="claimDate"
-                type="date"
-                required
-              >
+        <section>
+
+            <h2>Before You Submit</h2>
+
+            <p>
+                Select your reward, choose a future pickup
+                date and time, and enter your loyalty
+                information to submit your request.
+            </p>
+
+        </section>
+
+        <!-- =====================================================
+             REWARD DETAILS
+             ===================================================== -->
+
+        <section>
+
+            <h2>Reward Details</h2>
+
+            <form id="rewardForm" method="post">
+
+                <fieldset>
+
+                    <legend>Claim Your Reward Here</legend>
+
+                    <!-- =========================================
+                         CUSTOMER ID
+                         ========================================= -->
+
+                    <section class="form-group">
+
+                        <label for="customerId">
+                            Customer ID (Email)
+                        </label>
+
+                        <input
+                            class="form-control"
+                            id="customerId"
+                            name="customerId"
+                            type="email"
+                            placeholder="example@gmail.com"
+                            required
+                        >
+
+                    </section>
+
+                    <!-- =========================================
+                         AVAILABLE REWARD POINTS
+                         ========================================= -->
+
+                    <p>
+                        Available Reward Points:
+                        <strong id="availablePoints"></strong>
+                    </p>
+
+                    <!-- =========================================
+                         PICKUP DATE AND TIME / CATEGORY
+                         ========================================= -->
+
+                    <section class="form-row">
+
+                        <section class="form-group">
+
+                            <label for="pickupDateTime">
+                                Pickup Date &amp; Time
+                            </label>
+
+                            <input
+                                class="form-control"
+                                id="pickupDateTime"
+                                name="pickupDateTime"
+                                type="datetime-local"
+                                step="60"
+                                required
+                            >
+
+                            <small>
+                                Choose a future pickup time
+                                in your local time zone.
+                            </small>
+
+                        </section>
+
+                        <section class="form-group">
+
+                            <label for="category">
+                                Category
+                            </label>
+
+                            <select
+                                class="form-control"
+                                id="category"
+                                name="category"
+                                required
+                            >
+
+                                <option value="">
+                                    Choose a category
+                                </option>
+
+                                <option value="meals">
+                                    Meals
+                                </option>
+
+                                <option value="drink">
+                                    Drinks
+                                </option>
+
+                                <option value="merch">
+                                    Merch
+                                </option>
+
+                            </select>
+
+                        </section>
+
+                    </section>
+
+                    <!-- =========================================
+                         MENU ITEM SELECTION
+                         ========================================= -->
+
+                    <section class="form-group">
+
+                        <label for="rewardItem">
+                            Choose Item
+                        </label>
+
+                        <select
+                            class="form-control"
+                            id="rewardItem"
+                            name="rewardItem"
+                            required
+                            disabled
+                        >
+
+                            <option value="">
+                                Choose a category first
+                            </option>
+
+                        </select>
+
+                    </section>
+
+                    <!-- =========================================
+                         AUTOMATIC PRICE AND POINTS
+                         ========================================= -->
+
+                    <p
+                        id="selectedPrice"
+                        aria-live="polite"
+                    ></p>
+
+                    <!-- =========================================
+                         COMMENTS / REVIEW
+                         ========================================= -->
+
+                    <section class="form-group">
+
+                        <label for="comments">
+                            Comments / Review
+                        </label>
+
+                        <textarea
+                            class="form-control"
+                            id="comments"
+                            name="comments"
+                            rows="4"
+                            required
+                        ></textarea>
+
+                    </section>
+
+                    <!-- =========================================
+                         RECEIPT CHECKBOX
+                         ========================================= -->
+
+                    <section class="checkbox-group">
+
+                        <input
+                            id="receiptAttached"
+                            name="receiptAttached"
+                            type="checkbox"
+                            value="yes"
+                        >
+
+                        <label for="receiptAttached">
+                            Receipt attached
+                        </label>
+
+                    </section>
+
+                </fieldset>
+
+                <!-- =========================================
+                     SUBMIT REWARD
+                     ========================================= -->
+
+                <button
+                    id="submitRewardButton"
+                    type="submit"
+                >
+                    Submit Request
+                </button>
+
+                <!-- Display approval or rejection messages. -->
+                <p
+                    id="rewardMessage"
+                    aria-live="polite"
+                ></p>
+
+            </form>
+
+            <!-- =============================================
+                 CONFIRMATION NUMBER
+                 ============================================= -->
+
+            <!-- Only shown after DynamoDB saves a reward. -->
+            <div id="confirmationPanel" hidden>
+
+                <strong>Confirmation Number:</strong>
+
+                <code id="confirmationNumber"></code>
+
+                <p>
+                    Your reward request has been saved.
+                    Keep this number to check its status.
+                </p>
+
+            </div>
+
+            <!-- =============================================
+                 VIEW REWARD STATUS
+                 ============================================= -->
+
+            <section class="status-section">
+
+                <h2>View Reward Status</h2>
+
+                <p>
+                    Enter your confirmation number to
+                    view your saved reward information.
+                </p>
+
+                <form id="statusLookupForm">
+
+                    <label for="statusTransactionId">
+                        Confirmation Number
+                    </label>
+
+                    <input
+                        class="form-control"
+                        type="text"
+                        id="statusTransactionId"
+                        placeholder="Enter your transaction ID"
+                        required
+                    >
+
+                    <button
+                        type="submit"
+                        id="viewStatusButton"
+                    >
+                        View Status
+                    </button>
+
+                </form>
+
+                <!-- Lookup response message. -->
+                <p
+                    id="statusMessage"
+                    aria-live="polite"
+                ></p>
+
+                <!-- =========================================
+                     SAVED TRANSACTION DETAILS
+                     ========================================= -->
+
+                <div id="statusResult" hidden>
+
+                    <h3>Reward Information</h3>
+
+                    <p>
+                        <strong>Transaction ID:</strong>
+                        <span id="viewedTransactionId"></span>
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+                        <span id="viewedStatus"></span>
+                    </p>
+
+                    <p>
+                        <strong>Item:</strong>
+                        <span id="viewedItem"></span>
+                    </p>
+
+                    <p>
+                        <strong>Item Price:</strong>
+                        <span id="viewedPrice"></span>
+                    </p>
+
+                    <p>
+                        <strong>Pickup Date &amp; Time:</strong>
+                        <span id="viewedPickup"></span>
+                    </p>
+
+                    <p>
+                        <strong>Submitted At:</strong>
+                        <span id="viewedSubmittedAt"></span>
+                    </p>
+
+                    <p>
+                        <strong>Points Used:</strong>
+                        <span id="viewedPoints"></span>
+                    </p>
+
+                </div>
+
             </section>
 
-            <section class="form-group">
-              <label for="category">Category</label>
+        </section>
 
-              <select
-                class="form-control"
-                id="category"
-                name="category"
-                required
-              >
-                <option value="">Choose a category</option>
-                <option value="drink">Drink</option>
-                <option value="meals">Meals</option>
-                <option value="merch">Merch</option>
-                <option value="other">Other</option>
-              </select>
-            </section>
+    </main>
 
-          </section>
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
 
-          <!-- =====================================================
-               REWARD AMOUNT
-               ===================================================== -->
-          <section class="form-row">
-
-            <section class="form-group">
-              <label for="itemPrice">Item Price ($)</label>
-
-              <input
-                class="form-control"
-                id="itemPrice"
-                name="itemPrice"
-                type="number"
-                required
-                min="0.01"
-                step="0.01"
-              >
-            </section>
-          
-          </section>
-
-          <p id="rewardMessage" aria-live="polite"></p>
-
-          <!-- =====================================================
-               COMMENTS / REVIEW
-               ===================================================== -->
-
-          <section class="form-group">
-            <label for="comments">Comments / Review</label>
-
-            <textarea
-              class="form-control"
-              id="comments"
-              name="comments"
-              rows="4"
-              required
-            ></textarea>
-          </section>
-
-          <!-- =====================================================
-               RECEIPT CHECKBOX
-               ===================================================== -->
-
-          <section class="checkbox-group">
-            <input
-              id="receiptAttached"
-              name="receiptAttached"
-              type="checkbox"
-              value="yes"
-            >
-
-            <label for="receiptAttached">
-              Receipt attached
-            </label>
-          </section>
-
-        </fieldset>
-
-        <button type="submit">
-          Submit Request
-        </button>
-
-      </form>
-
-      <!-- Show a confirmation number after a reward is saved. -->
-<p id="confirmationPanel" hidden>
-    <strong>Confirmation Number:</strong>
-    <code id="confirmationNumber"></code>
-</p>
-
-<!-- Let customers look up their saved reward transaction. -->
-<section class="status-section">
-    <h2>View Reward Status</h2>
-
-    <p>
-        Enter your confirmation number to check
-        the status of your reward.
-    </p>
-
-    <form id="statusLookupForm">
-        <label for="statusTransactionId">
-            Confirmation Number
-        </label>
-
-        <input
-            type="text"
-            id="statusTransactionId"
-            placeholder="Enter your transaction ID"
-            required
-        >
-
-        <button type="submit" id="viewStatusButton">
-            View Status
-        </button>
-    </form>
-
-    <!-- Display the result from DynamoDB. -->
-    <p id="statusMessage" aria-live="polite"></p>
-
-    <div id="statusResult" hidden>
-        <h3>Reward Information</h3>
-
-        <p>
-            <strong>Transaction ID:</strong>
-            <span id="viewedTransactionId"></span>
-        </p>
-
-        <p>
-            <strong>Status:</strong>
-            <span id="viewedStatus"></span>
-        </p>
-
-        <p>
-            <strong>Submitted At:</strong>
-            <span id="viewedSubmittedAt"></span>
-        </p>
-
-        <p>
-            <strong>Points Used:</strong>
-            <span id="viewedPoints"></span>
-        </p>
-    </div>
-    
-</section>
-    </section>
-
-  </main>
-
-  <footer>
-    <p>Don't forget to leave a review!</p>
-  </footer>
+    <footer>
+        <p>Don't forget to leave a review!</p>
+    </footer>
 
 </body>
 </html>

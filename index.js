@@ -1,16 +1,22 @@
+
 "use strict";
 
-// MIS 3371 - Week 11
-// Burger Shot Rewards System
-// This file connects AWS Lambda, API Gateway, and DynamoDB.
+// MIS 3371 - Burger Shot Rewards System (AWS Lambda)
+//
+// POST: Validate and save a reward to DynamoDB.
+// GET: Retrieve a saved reward using its transaction ID.
 
-// Import our existing Burger Shot backend.
+// =====================================================
+// IMPORTS
+// =====================================================
+
+// Import our Burger Shot backend rules.
 const { processReward } = require("./backend/backend");
 
-// Generate unique transaction IDs for saved rewards.
+// Generate official transaction IDs.
 const { randomUUID } = require("node:crypto");
 
-// Import the AWS DynamoDB tools.
+// Import AWS DynamoDB tools.
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 
 const {
@@ -19,32 +25,45 @@ const {
     GetCommand
 } = require("@aws-sdk/lib-dynamodb");
 
-// Get our DynamoDB table name from Lambda settings.
+// =====================================================
+// DYNAMODB CONFIGURATION
+// =====================================================
+
+// Existing DynamoDB table.
+// Primary key: transactionId (String).
 const TABLE_NAME = process.env.TABLE_NAME;
 
-// Connect to DynamoDB using our existing AWS permissions.
 const dynamo = DynamoDBDocumentClient.from(
     new DynamoDBClient({})
 );
 
-// Create a response that AWS API Gateway can understand.
+// =====================================================
+// API RESPONSE HELPER
+// =====================================================
+
 function makeResponse(statusCode, result) {
     return {
         statusCode,
+
         headers: {
             "Content-Type": "application/json"
         },
+
         body: JSON.stringify(result)
     };
 }
 
-// AWS Lambda starts here.
+// =====================================================
+// AWS LAMBDA HANDLER
+// =====================================================
+
 exports.handler = async (event = {}) => {
 
-    // Find out whether the request is POST or GET.
-    const method = event?.requestContext?.http?.method;
+    // Read the HTTP method from API Gateway.
+    const method =
+        event?.requestContext?.http?.method;
 
-    // Make sure our DynamoDB table is configured.
+    // Make sure the database table is configured.
     if (!TABLE_NAME) {
         return makeResponse(500, {
             success: false,
@@ -53,20 +72,20 @@ exports.handler = async (event = {}) => {
         });
     }
 
-    // =========================================
-    // GET - Retrieve a saved reward transaction.
-    // =========================================
+    // =================================================
+    // GET - RETRIEVE A SAVED TRANSACTION
+    // =================================================
 
     if (method === "GET") {
 
-        // Get the transaction ID from the API URL.
+        // Get the transaction ID from the URL.
         const transactionId =
             event.pathParameters?.transactionId;
 
-        // Make sure a transaction ID was provided.
-        if (typeof transactionId !== "string" ||
-            !transactionId.trim()) {
-
+        if (
+            typeof transactionId !== "string" ||
+            !transactionId.trim()
+        ) {
             return makeResponse(400, {
                 success: false,
                 message: "A transaction ID is required."
@@ -75,17 +94,19 @@ exports.handler = async (event = {}) => {
 
         try {
 
-            // Search DynamoDB for the transaction ID.
+            // Search DynamoDB using the transaction ID.
             const response = await dynamo.send(
                 new GetCommand({
                     TableName: TABLE_NAME,
+
                     Key: {
-                        transactionId: transactionId.trim()
+                        transactionId:
+                            transactionId.trim()
                     }
                 })
             );
 
-            // Return 404 if the transaction does not exist.
+            // Return 404 if the transaction was not found.
             if (!response.Item) {
                 return makeResponse(404, {
                     success: false,
@@ -93,17 +114,22 @@ exports.handler = async (event = {}) => {
                 });
             }
 
-            // Return the saved transaction to the website.
+            // Return the stored transaction information.
             return makeResponse(200, {
                 success: true,
-                message: "Transaction retrieved successfully.",
+
+                message:
+                    "Transaction retrieved successfully.",
+
                 transaction: response.Item
             });
 
         } catch (error) {
 
-            // Handle errors when reading from DynamoDB.
-            console.error("DynamoDB read error:", error);
+            console.error(
+                "DynamoDB read error:",
+                error
+            );
 
             return makeResponse(500, {
                 success: false,
@@ -112,22 +138,25 @@ exports.handler = async (event = {}) => {
         }
     }
 
-    // =========================================
-    // POST - Process and save a new reward.
-    // =========================================
+    // =================================================
+    // POST - SUBMIT A NEW REWARD
+    // =================================================
 
-    // Only accept POST requests for new rewards.
+    // Reject unsupported methods.
     if (method !== "POST") {
         return makeResponse(405, {
             success: false,
-            message: "Only POST and GET requests are allowed."
+
+            message:
+                "Only POST and GET requests are allowed."
         });
     }
 
-    // Make sure a request body was provided.
-    if (typeof event.body !== "string" ||
-        !event.body.trim()) {
-
+    // Make sure the customer submitted data.
+    if (
+        typeof event.body !== "string" ||
+        !event.body.trim()
+    ) {
         return makeResponse(400, {
             success: false,
             message: "Request body is required.",
@@ -135,12 +164,17 @@ exports.handler = async (event = {}) => {
         });
     }
 
-    // Convert the JSON string into JavaScript data.
+    // =================================================
+    // PARSE THE REQUEST BODY
+    // =================================================
+
     let reward;
 
     try {
         reward = JSON.parse(event.body);
+
     } catch (error) {
+
         return makeResponse(400, {
             success: false,
             message: "Invalid JSON request.",
@@ -148,8 +182,17 @@ exports.handler = async (event = {}) => {
         });
     }
 
-    // Use the existing backend to validate the reward.
-    // Our original business rules stay in backend.js.
+    // =================================================
+    // VALIDATE USING BACKEND RULES
+    // =================================================
+
+    // The backend verifies:
+    // - Customer email
+    // - Future pickup time
+    // - Valid category and menu item
+    // - Official item price
+    // - Required reward points
+
     let result;
 
     try {
@@ -157,18 +200,22 @@ exports.handler = async (event = {}) => {
 
     } catch (error) {
 
-        // Handle unexpected errors from the backend.
-        console.error("Backend error:", error);
+        console.error(
+            "Backend error:",
+            error
+        );
 
         return makeResponse(500, {
             success: false,
-            message: "An unexpected server error occurred.",
+
+            message:
+                "An unexpected server error occurred.",
+
             persisted: false
         });
     }
 
-    // Rejected = 400.
-    // Do not save transactions that fail validation.
+    // Do not save invalid or rejected transactions.
     if (!result.success) {
         return makeResponse(400, {
             ...result,
@@ -176,64 +223,114 @@ exports.handler = async (event = {}) => {
         });
     }
 
-    // =========================================
-    // Save the approved reward to DynamoDB.
-    // =========================================
+    // =================================================
+    // PREPARE DYNAMODB TRANSACTION
+    // =================================================
 
-    // Create an official transaction record.
-    // The transaction ID and timestamp come from Lambda,
-    // not from information submitted by the customer.
+    // Use only the validated information from backend.js.
+    // Lambda generates the official transaction ID and time.
+
     const record = {
-        transactionId: `RWD-${randomUUID()}`,
-        submittedAt: new Date().toISOString(),
 
-        // Information from the validated reward.
-        customerId: result.customerId,
-        claimDate: String(reward.claimDate).trim(),
-        category: String(reward.category).trim(),
-        itemPrice: Number(reward.itemPrice),
-        comments: String(reward.comments).trim(),
-        receiptAttached: reward.receiptAttached === true,
+        transactionId:
+            `RWD-${randomUUID()}`,
 
-        // Results from our existing backend.
-        status: result.status,
-        pointsRequired: result.pointsRequired,
-        finalPrice: result.finalPrice,
+        submittedAt:
+            new Date().toISOString(),
+
+        // Customer information.
+        customerId:
+            result.customerId,
+
+        // Requested pickup date and time.
+        pickupAt:
+            result.pickupAt,
+
+        // Official Burger Shot menu information.
+        category:
+            result.category,
+
+        rewardItem:
+            result.rewardItem,
+
+        itemName:
+            result.itemName,
+
+        itemPrice:
+            result.itemPrice,
+
+        // Additional customer information.
+        comments:
+            result.comments,
+
+        receiptAttached:
+            result.receiptAttached,
+
+        // Validated reward results.
+        status:
+            result.status,
+
+        pointsRequired:
+            result.pointsRequired,
+
+        finalPrice:
+            result.finalPrice,
+
         remainingPointsIfRedeemed:
             result.remainingPointsIfRedeemed
     };
 
+    // =================================================
+    // SAVE TO DYNAMODB
+    // =================================================
+
     try {
 
-        // PutCommand saves the transaction to DynamoDB.
+        // Save the approved transaction.
         await dynamo.send(
             new PutCommand({
+
                 TableName: TABLE_NAME,
+
                 Item: record,
 
-                // Prevent overwriting an existing transaction.
+                // Prevent overwriting an existing ID.
                 ConditionExpression:
                     "attribute_not_exists(transactionId)"
             })
         );
 
-        // Approved and saved = 200.
-        // persisted: true confirms the database write worked.
+        // =================================================
+        // RETURN SAVED CONFIRMATION
+        // =================================================
+
+        // persisted: true means the database write succeeded.
         return makeResponse(200, {
+
             ...result,
-            transactionId: record.transactionId,
-            submittedAt: record.submittedAt,
+
+            transactionId:
+                record.transactionId,
+
+            submittedAt:
+                record.submittedAt,
+
             persisted: true
         });
 
     } catch (error) {
 
-        // Handle problems saving to DynamoDB.
-        console.error("DynamoDB save error:", error);
+        console.error(
+            "DynamoDB save error:",
+            error
+        );
 
         return makeResponse(500, {
             success: false,
-            message: "Unable to save reward transaction.",
+
+            message:
+                "Unable to save reward transaction.",
+
             persisted: false
         });
     }
