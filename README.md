@@ -10,14 +10,12 @@ Evan Flett
 Hailey Do
 Andrea Esparza
 
-GOAL: 
-Our system encapsulates a restaurant loyalty rewards system for a fictional fast food chain named "Burger Shot". 
-The goal of our system is to allow the customer to verify themselves with their Customer ID in order to 
-redeem their loyalty points and claim corresponding rewards with it. 
+The Burger Shot Rewards System allows customers to redeem loyalty points for selected restaurant items. Customers enter their email, choose a reward category and menu item, select a future pickup date and time, and submit their request.
 
-Layout:
-The customer inputs their Customer ID, in which case, the system is able to register the reward points attached to
-their account. 
-With this, the customer can input their claim date, the category of the reward they would like to redeem, along with
-the price of the item. 
-Customers also have the option to leave a comment or a review for their experience. 
+The system automatically determines the item's official price and calculates the required reward points. If the customer has enough demo points and all information is valid, the transaction is saved in DynamoDB.
+
+Customers receive a confirmation number and can use the View Reward Status feature to retrieve their saved transaction.
+
+The application uses HTML, CSS, JavaScript, AWS Amplify, API Gateway, AWS Lambda, and DynamoDB.
+
+Current limitations: The system uses a fixed demo balance of 100 points. It does not deduct points from actual customer accounts or notify restaurant employees about pickup requests.
